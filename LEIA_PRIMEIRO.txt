@@ -1,0 +1,22 @@
+ABISSAL — SITE CORRIGIDO
+
+Como abrir:
+1. Extraia o arquivo .zip inteiro.
+2. Abra a pasta "abismo_site".
+3. Dê dois cliques em "ABRIR_SITE.html". Esta versão contém o HTML, CSS e JavaScript em um único arquivo e funciona offline.
+
+Opcionalmente, abra "index.html". Ele também funciona offline, desde que "styles.css", "script.js" e a pasta "assets" permaneçam junto dele.
+
+Correção aplicada:
+- Janelas ocultas não aparecem automaticamente ao entrar no site.
+- A tela K–00 / Kraken só aparece após cumprir as condições e clicar no botão de visualização.
+- O menu para celular começa fechado.
+
+Conteúdo:
+- Início e sonar
+- Mergulho e instrumentos
+- Laboratório
+- Catálogo de criaturas do Abyssal Chasm
+- Compêndio interativo das seis cavernas
+- Arquivos da expedição
+- Transmissão e evento do Kraken

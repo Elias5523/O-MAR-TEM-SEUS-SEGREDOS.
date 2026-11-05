@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#03121c" />
+  <meta name="description" content="Arquivo da Estação Nerítica. Registros de uma expedição nas profundezas, anomalias da fenda e documentos selados." />
+  <title>ABISSAL — Estação de Pesquisa K-00</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="catalog.css" />
+  <link rel="stylesheet" href="expedition.css" />
+  <link rel="stylesheet" href="compendium.css" />
+  <link rel="stylesheet" href="hullbreakers.css" />
+</head>
+<body>
+  <div id="sea-stage" aria-hidden="true">
+    <canvas id="abyss3d"></canvas>
+    <canvas id="particles"></canvas>
+    <div class="surface-shimmer"></div>
+    <div class="caustic-glow"></div>
+    <div class="edge-vignette"></div>
+  </div>
+
+  <div class="site-shell">
+    <header class="topbar" id="topo">
+      <a class="brand" href="#inicio" aria-label="ABISSAL — voltar ao início">
+        <span class="brand-mark"><svg viewBox="0 0 32 32" width="28" height="28" fill="none" aria-hidden="true"><path d="M5 17.5C11.2 17.5 11.6 9 16 9s4.8 8.5 11 8.5M5 23c6.2 0 6.6-8.5 11-8.5s4.8 8.5 11 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="16" cy="5" r="1.75" fill="currentColor"/></svg></span>
+        <span class="brand-word">ABISSAL<span class="brand-point">.</span><small>ARQUIVO DE PROFUNDIDADE</small></span>
+      </a>
+      <nav class="desktop-nav" aria-label="Navegação principal">
+        <a href="#inicio" data-nav="inicio" class="current">01 <span>Início</span></a>
+        <a href="#mergulho" data-nav="mergulho">02 <span>Mergulho</span></a>
+        <a href="#laboratorio" data-nav="laboratorio">03 <span>Laboratório</span></a>
+        <a href="#bestiario" data-nav="bestiario">04 <span>Catálogo</span></a>
+        <a href="#hullbreakers" data-nav="hullbreakers">05 <span>Seres</span></a>
+        <a href="#compendio" data-nav="compendio">06 <span>Compêndio</span></a>
+        <a href="#arquivos" data-nav="arquivos">07 <span>Arquivos</span></a>
+      </nav>
+      <div class="header-tools">
+        <span class="connection"><i></i> SINAL ESTÁVEL</span>
+        <button id="soundToggle" class="icon-button" aria-label="Ativar som ambiente" title="Ativar/desativar som ambiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path class="sound-wave" d="M15 9a4 4 0 0 1 0 6m3-9a8 8 0 0 1 0 12"/><path class="sound-off" d="m16 9 5 6m0-6-5 6"/></svg></button>
+        <button class="menu-toggle icon-button" id="menuToggle" aria-expanded="false" aria-controls="mobileNav" aria-label="Abrir menu"><span></span><span></span></button>
+      </div>
+    </header>
+    <nav class="mobile-nav" id="mobileNav" aria-label="Navegação mobile" hidden>
+      <a href="#inicio">Início</a><a href="#expedicao">Cartografia</a><a href="#mergulho">Mergulho</a><a href="#laboratorio">Laboratório</a><a href="#bestiario">Catálogo</a><a href="#hullbreakers">Os Dois do Abismo</a><a href="#compendio">Compêndio</a><a href="#arquivos">Arquivos</a><a href="#transmissao">Transmissão</a>
+    </nav>
+
+    <div class="station-ribbon" role="status" aria-label="Estado da estação"><span><i class="station-led"></i> ESTAÇÃO NERÍTICA / TERMINAL AC–04</span><span id="stationClock">SISTEMAS ONLINE</span><a href="#anomalia">PROTOCOLO K–00 <span id="globalKStatus">BLOQUEADO</span> ↗</a></div>
+
+    <main>
+      <section class="hero" id="inicio" aria-labelledby="hero-title">
+        <div class="hero-rail" aria-hidden="true"><span>AC–04 / EXPEDIÇÃO NERÍTICA</span><div class="rail-line"></div><span>DEEP SEA ARCHIVE</span></div>
+        <div class="hero-content">
+          <div class="eyebrow"><span class="eyebrow-line"></span> DOSSIÊ 004 <span class="eyebrow-star">✦</span> NENHUMA LUZ CHEGA ATÉ AQUI</div>
+          <h1 id="hero-title">O MAR TEM<br/>SEUS <em>SEGREDOS.</em></h1>
+          <p class="hero-description">Abaixo da última faixa de luz, existe um mundo que nunca aprendeu a temer a escuridão. E há coisas nas profundezas que já perceberam a nossa chegada.</p>
+          <div class="hero-actions">
+            <button class="primary-action" id="diveBtn"><span class="action-circle">↘</span><span>INICIAR DESCIDA</span><span class="button-tick">01 / 08</span></button>
+            <a href="#hullbreakers" class="text-action">OS DOIS DO ABISMO <span>↗</span></a>
+          </div>
+          <div class="hero-footnote"><span class="pulsing-dot"></span> TRANSMISSÃO NERÍTICA / SINAL AINDA ATIVO</div>
+        </div>
+
+        <aside class="sonar-panel" aria-label="Painel de sonar interativo">
+          <div class="panel-header"><span>VARREDURA SONAR</span><span class="panel-status"><i></i> ATIVO</span></div>
+          <button id="sonarButton" class="sonar-display" aria-label="Emitir pulso de sonar para detectar atividade" title="Clique para emitir um pulso de sonar">
+            <span class="sonar-grid"></span><span class="sonar-sweep"></span><span class="sonar-ring sonar-ring-1"></span><span class="sonar-ring sonar-ring-2"></span><span class="sonar-center"></span>
+            <span class="sonar-target target-a"></span><span class="sonar-target target-b"></span><span class="sonar-target target-c"></span><span class="sonar-ping"></span>
+            <span class="sonar-cross v"></span><span class="sonar-cross h"></span>
+          </button>
+          <div class="sonar-bottom"><div><small>ALCANCE</small><strong>2.400 <span>m</span></strong></div><div class="right"><small>ECOS DETECTADOS</small><strong id="echoCount">00<span> / 03</span></strong></div></div>
+          <div id="sonarFeedback" class="sonar-feedback" aria-live="polite">TOQUE NO RADAR PARA INICIAR UMA VARREDURA</div>
+        </aside>
+        <div class="hero-bottom">
+          <div class="hero-coordinate"><span>LAT. 22° 41′ S</span><span>LONG. 038° 07′ W</span></div>
+          <a href="#expedicao" class="scroll-hint"><span>ROLE PARA DESCOBRIR</span><span class="scroll-bar"><span></span></span></a>
+          <div class="depth-monitor"><span>PROFUNDIDADE ESTIMADA</span><strong><span id="depthReadout">0000</span><small> m</small></strong></div>
+        </div>
+        <div class="vertical-label" aria-hidden="true">A LUZ NÃO VAI TE ACOMPANHAR</div>
+      </section>
+
+      <section class="intro-section section-wrap" id="expedicao" aria-labelledby="exp-title">
+        <div class="section-heading"><div class="section-index">01 <span>—</span> CARTOGRAFIA</div><div class="tiny-line"></div><span class="section-micro">REGIÃO NÃO CARTOGRAFADA</span></div>
+        <div class="intro-grid">
+          <div class="intro-copy">
+            <h2 id="exp-title">Existe um mundo<br/>depois da <em>superfície.</em></h2>
+            <p>A <strong>Fenda Abissal</strong> se estende abaixo da última camada de luz. Suas paredes de Abyssmarine descem até um leito coberto por Muck. Entre as rochas, encontram-se ruínas ocupadas por uma sociedade que raramente permite ser observada.</p>
+            <p>Os mapas recuperados da Estação Nerítica registram apenas quatro setores. Nenhum explorador retornou com uma cartografia completa. Escolha uma coordenada para abrir os relatórios que ainda restam.</p>
+            <div class="inline-note"><span class="note-symbol">✳</span><span>Quatro pontos de interesse. Nem tudo que aparece no sonar quer ser encontrado.</span></div>
+          </div>
+          <div class="sector-selector" aria-label="Escolha um setor da expedição">
+            <div class="sector-top"><span>MAPA BATIMÉTRICO / 004</span><span>SETORES <b id="sectorCounter">01 — 04</b></span></div>
+            <div class="trench-map" id="trenchMap">
+              <svg class="contour-svg" viewBox="0 0 600 310" preserveAspectRatio="none" aria-hidden="true"><path d="M-100 40 C60 -20 190 140 370 15 S570 50 720 -15"/><path d="M-100 85 C60 25 190 185 370 60 S570 95 720 30"/><path d="M-100 130 C60 70 190 230 370 105 S570 140 720 75"/><path d="M-100 175 C60 115 190 275 370 150 S570 185 720 120"/><path d="M-100 220 C60 160 190 320 370 195 S570 230 720 165"/><path d="M-100 265 C60 205 190 365 370 240 S570 275 720 210"/><path d="M-100 310 C60 250 190 410 370 285 S570 320 720 255"/><path d="M-100 355 C60 295 190 455 370 330 S570 365 720 300"/></svg>
+              <span class="map-axis axis-a">– 1800 m</span><span class="map-axis axis-b">– 2900 m</span>
+              <span class="map-track"></span>
+              <button class="map-point active" data-sector="ruinas" style="--x:26%;--y:25%" aria-label="Ir para Ruínas dos Deep Ones"><span>01</span></button>
+              <button class="map-point" data-sector="queda" style="--x:60%;--y:43%" aria-label="Ir para Queda da Baleia"><span>02</span></button>
+              <button class="map-point" data-sector="fontes" style="--x:40%;--y:78%" aria-label="Ir para Fontes Geotérmicas"><span>03</span></button>
+              <button class="map-point restricted" data-sector="fenda" style="--x:76%;--y:80%" aria-label="Ir para Fenda do Silêncio"><span>04</span></button>
+              <span class="map-compass">N <i>↑</i></span>
+            </div>
+            <div class="sector-info"><div><span class="sector-kicker" id="sectorKicker">SETOR 01 / FORMAÇÃO SUBMERSA</span><h3 id="sectorTitle">Ruínas dos Deep Ones</h3><p id="sectorDescription">Estruturas ancestrais de Abyssmarine repousam entre a lama e a escuridão. Os habitantes observam antes de decidir se você é uma ameaça.</p></div><button id="openSector" class="sector-arrow" aria-label="Abrir registro do setor selecionado">↗</button></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="divider-quote" aria-label="Citação da expedição"><span>REGISTRO DE BORDO / 007</span><p>“Lá embaixo, o silêncio <em>não significa</em> que estamos sozinhos.”</p><div class="quote-line"></div></section>
+
+
+      <section class="dive-section section-wrap" id="mergulho" aria-labelledby="dive-heading">
+        <div class="section-heading"><div class="section-index">02 <span>—</span> DESCIDA CONTROLADA</div><div class="tiny-line"></div><span class="section-micro">ESTAÇÃO / OBSERVATÓRIO 04</span></div>
+        <div class="dive-heading-grid"><div><div class="dive-kicker">SISTEMA OPERACIONAL • CÁPSULA NERÍTICA</div><h2 id="dive-heading">Desça até onde<br/><em>o oceano esquece.</em></h2></div><p>Assuma o controle da cápsula de observação. A luz, a fauna e as leituras mudam a cada camada de água. O que está além dos limites da estação ainda não foi classificado.</p></div>
+        <div class="dive-console">
+          <div class="viewport-unit">
+            <div class="viewport-toolbar"><span><i class="pulsing-dot"></i> CÂMERA EXTERNA / OBS–01</span><span id="cameraCoordinates">LOCALIZANDO...</span><span id="cameraLive">● AO VIVO</span></div>
+            <div class="viewport-frame" id="viewportFrame"><canvas id="expeditionView" aria-label="Vista animada da fenda submarina pela janela da cápsula" role="img"></canvas><div class="glass-frost"></div><span class="viewport-crosshair" aria-hidden="true">+</span><div class="view-overlay top"><span id="depthZoneCaption">CAMADA EPIPELÁGICA</span><span id="viewTemp">18,4 °C</span></div><div class="view-overlay bottom"><span>CH 01 / FENDA ABISSAL</span><span id="viewCaption">INICIANDO IMERSÃO</span></div><div class="viewport-frame-rim" aria-hidden="true"></div></div>
+            <div class="camera-actions"><div class="cam-signal"><span class="cam-signal-bars">▮▮▮▮</span> CÂMERA EXTERNA • TRANSMISSÃO NERÍTICA</div><button id="lampToggle" class="instrument-button" type="button" aria-pressed="true"><span class="button-led"></span> HOLOFOTE: LIGADO</button></div>
+          </div>
+          <aside class="dive-instruments" aria-label="Instrumentos de descida"><div class="instrument-title"><span>TELEMETRIA  /  ROV–04</span><span class="live-dot">● REC</span></div><div class="big-reading"><span>PROFUNDIDADE / LEITURA ATUAL</span><div><strong id="diveDepthValue">0000</strong><small>m</small></div></div><div class="instrument-metrics"><div><span>PRESSÃO ESTIMADA</span><strong id="pressureValue">1 bar</strong></div><div><span>LUZ AMBIENTE</span><strong id="lightValue">100%</strong></div><div><span>TEMPERATURA EXTERNA</span><strong id="tempValue">18,4 °C</strong></div><div><span>CONTATO SONAR</span><strong id="diveSonarValue">NENHUM</strong></div></div><div class="depth-slider-wrap"><label for="diveSlider">CONTROLE DE PROFUNDIDADE</label><input id="diveSlider" type="range" min="0" max="4800" step="100" value="0" aria-describedby="depthDisclaimer"/><div class="slider-ticks"><span>0 m</span><span>2.400 m</span><span>4.800 m</span></div></div><div class="dive-buttons"><button id="descendMore" class="instrument-button primary" type="button">DESCER 800 m ↓</button><button id="ascendMore" class="instrument-button" type="button">SUBIR 800 m ↑</button></div><div class="zone-report"><span id="zoneReportTag">ZONA 01 / SUPERFÍCIE</span><h3 id="zoneReportTitle">Última luz</h3><p id="zoneReportText">A superfície desaparece lentamente atrás da cápsula. Os sensores calibram a pressão e a temperatura.</p></div><p id="depthDisclaimer" class="instrument-disclaimer">Leituras sujeitas a interferência magnética e acústica abaixo da camada de pressão crítica.</p></aside>
+        </div>
+        <div class="depth-timeline" aria-label="Camadas de exploração"><button class="depth-mark active" data-goto-depth="0" type="button"><span>00</span><b>SUPERFÍCIE</b><small>0000 m</small></button><button class="depth-mark" data-goto-depth="900" type="button"><span>01</span><b>CREPÚSCULO</b><small>0900 m</small></button><button class="depth-mark" data-goto-depth="1900" type="button"><span>02</span><b>COLUNA ESCURA</b><small>1900 m</small></button><button class="depth-mark" data-goto-depth="3100" type="button"><span>03</span><b>PLANÍCIE DE MUCK</b><small>3100 m</small></button><button class="depth-mark locked-depth" data-goto-depth="4600" type="button"><span>04</span><b>FENDA DO SILÊNCIO</b><small>4600 m</small></button></div>
+      </section>
+
+      <section class="lab-section section-wrap" id="laboratorio" aria-labelledby="lab-heading">
+        <div class="section-heading"><div class="section-index">03 <span>—</span> ESTAÇÃO OCEANOGRÁFICA</div><div class="tiny-line"></div><span class="section-micro">BIOLUMINESCÊNCIA / SEDIMENTO / ACÚSTICA</span></div>
+        <div class="lab-heading-grid"><div><div class="dive-kicker">ESTAÇÃO NERÍTICA • DEPARTAMENTO DE BIOLOGIA</div><h2 id="lab-heading">A ciência também<br/><em>escuta a escuridão.</em></h2></div><p>Acesse os instrumentos da estação: examine amostras, ouça assinaturas submarinas e estude as inscrições encontradas nas ruínas dos Deep Ones.</p></div>
+        <div class="lab-deck">
+          <section class="lab-module microscopy" aria-label="Microscópio interativo"><div class="module-top"><span>LAB / 01</span><span><i class="pulsing-dot"></i> AMOSTRA EM ANÁLISE</span></div><h3>Microscópio abissal</h3><p class="module-intro">Selecione uma amostra. A vista e o registro do pesquisador mudam conforme o material.</p><div class="sample-list" role="group" aria-label="Selecionar amostra"><button class="sample-button active" data-sample="plankton" aria-pressed="true">BIO–01 <b>Bioluminescência</b></button><button class="sample-button" data-sample="muck" aria-pressed="false">SED–02 <b>Muck</b></button><button class="sample-button" data-sample="vent" aria-pressed="false">GEO–03 <b>Fonte termal</b></button></div><div class="microscope-screen"><canvas id="microCanvas" aria-label="Visualização científica estilizada da amostra" role="img"></canvas><span class="micro-cross">+</span><span class="micro-scale">AMPLIAÇÃO / 400× • MICROSCOPIA ÓPTICA</span></div><div class="sample-report"><span id="sampleCode">BIO–01 / LUMINESCÊNCIA</span><h4 id="sampleTitle">Luz produzida pela vida</h4><p id="sampleText">Certos organismos do bioma emitem luz no escuro. O brilho facilita encontros inesperados — e também atrai predadores.</p></div></section>
+          <section class="lab-module hydrophone" aria-label="Hidrofone interativo"><div class="module-top"><span>LAB / 02</span><span>RECEPTOR HIDROACÚSTICO</span></div><h3>Hidrofone</h3><p class="module-intro">Três assinaturas foram isoladas do ruído profundo. A origem do terceiro sinal permanece indeterminada.</p><canvas id="hydroCanvas" aria-label="Espectrograma animado da assinatura acústica selecionada" role="img"></canvas><div class="audio-signals"><button class="hydro-signal active" data-hydro="current" aria-pressed="true"><span>01</span><b>CORRENTE PROFUNDA</b><small>PADRÃO AMBIENTAL</small></button><button class="hydro-signal" data-hydro="fauna" aria-pressed="false"><span>02</span><b>VOCALIZAÇÃO DISTANTE</b><small>ORIGEM NÃO CONCLUSIVA</small></button><button class="hydro-signal" data-hydro="unknown" aria-pressed="false"><span>03</span><b>ASSINATURA K–00</b><small>CONTATO ANÔMALO</small></button></div><div class="hydro-actions"><button id="playHydro" class="instrument-button primary" type="button">▶ REPRODUZIR SINAL</button><span id="hydroStatus" aria-live="polite">CANAL 01 / AGUARDANDO</span></div></section>
+        </div>
+        <div class="civilization-panel"><div class="civilization-copy"><span class="dive-kicker">ARQUEOLOGIA / SUBSETOR RUÍNAS</span><h3>O idioma das <em>profundezas.</em></h3><p>Símbolos foram encontrados ao longo das ruínas dos Deep Ones. Suas repetições sugerem uma linguagem ritual. A equipe preservou três inscrições, mas ainda discute o significado de cada uma.</p><div class="ancient-tags"><span>ABYSSAL ALTAR</span><span>PEARL</span><span>DEEP ONE RUINS</span></div></div><div class="inscription-machine"><div class="inscription-head">MATRIZ DE INSCRIÇÕES / ATIVA <span>⌁⌁⌁</span></div><div class="glyph-buttons"><button data-glyph="0" class="glyph-button active" aria-pressed="true" type="button">◇<small>I</small></button><button data-glyph="1" class="glyph-button" aria-pressed="false" type="button">⋔<small>II</small></button><button data-glyph="2" class="glyph-button" aria-pressed="false" type="button">◈<small>III</small></button></div><div class="glyph-translation"><span id="glyphIndex">INSCRIÇÃO 01 / ÁGUA</span><strong id="glyphPhrase">“O mar conserva os nomes.”</strong><p id="glyphInterpretation">Registro encontrado na pedra das ruínas. Os pesquisadores acreditam que a marca se refira à memória da própria fenda.</p></div><a href="#arquivos" class="glyph-continue">CONSULTAR OS DIÁRIOS DE CAMPO ↗</a></div></div>
+      </section>
+
+<section class="creature-section section-wrap" id="bestiario" aria-labelledby="bestiary-title">
+        <div class="catalog-seafloor" aria-hidden="true"></div>
+        <div class="abyssal-bioglow" aria-hidden="true"><span class="glow-a"></span><span class="glow-b"></span><span class="glow-c"></span><span class="glow-d"></span><span class="glow-e"></span></div>
+        <div class="section-heading"><div class="section-index">04 <span>—</span> REGISTROS BIOLÓGICOS</div><div class="tiny-line"></div><span class="section-micro">DEPARTAMENTO DE PESQUISA ABISSAL</span></div>
+        <div class="bestiary-top"><div><div class="catalog-overline">INSTITUTO OCEANOGRÁFICO / DOSSIÊ AC–04</div><h2 id="bestiary-title">A ciência da<br/><em>escuridão.</em></h2></div><p>Nove organismos e entidades exclusivos do <strong>Abyssal Chasm</strong>, catalogados por comportamento e observações de campo. Sem ilustrações: somente o nome, o arquivo e o desconhecido.</p></div>
+        <div class="catalog-heading-band" aria-label="Cabeçalho do catálogo"><span class="catalog-band-left">ALEX'S CAVES <span class="band-line"></span></span><span class="catalog-band-center"><span class="band-chevron">‹</span> ABYSSAL CHASM <span class="band-chevron">›</span><small>CATÁLOGO CIENTÍFICO DE ESPÉCIES</small></span><span class="catalog-band-right"><span class="band-line"></span> ARQUIVO / NÍVEL IV <b>///</b></span></div>
+        <div class="catalog-toolbar"><div class="catalog-filters" role="group" aria-label="Filtrar registros pelo comportamento"><button class="catalog-filter active" type="button" data-filter="all" aria-pressed="true">TODOS <small>09</small></button><button class="catalog-filter" type="button" data-filter="passive" aria-pressed="false">PASSIVOS <small>04</small></button><button class="catalog-filter" type="button" data-filter="neutral" aria-pressed="false">NEUTROS <small>04</small></button><button class="catalog-filter" type="button" data-filter="hostile" aria-pressed="false">HOSTIS <small>01</small></button></div><span class="catalog-count" aria-live="polite"><i></i><span id="catalogShown">09</span> REGISTROS LOCALIZADOS</span></div>
+        <div class="catalog-stage"><div class="catalog-depth-rail" aria-hidden="true"><span>PROFUNDIDADE</span><div class="depth-ticks"><b>— 3.800</b><b>— 4.200</b><b>— 4.600</b><b>— 5.000</b></div><small>SIMULAÇÃO</small></div><div class="catalog-grid-shell"><div class="creature-grid" id="creatureGrid">
+                <button class="creature-card" type="button" data-creature="deepone" data-status="neutral" aria-label="Abrir registro científico: Deep One">
+                  <span class="specimen-top"><span class="specimen-led"></span><span>SPC–001</span><span class="specimen-line"></span><span class="specimen-plus" aria-hidden="true">＋</span></span>
+                  <span class="specimen-contour" aria-hidden="true"></span>
+                  <span class="specimen-name">Deep One</span>
+                  <span class="specimen-class"><span class="specimen-class-line"></span><span>HUMANOIDE ABISSAL</span><span class="specimen-class-line"></span></span>
+                  <span class="specimen-hover"><span>ABRIR REGISTRO</span><span aria-hidden="true">↗</span></span>
+                </button>
+                <button class="creature-card" type="button" data-creature="deeponeknight" data-status="neutral" aria-label="Abrir registro científico: Deep One Knight">
+                  <span class="specimen-top"><span class="specimen-led"></span><span>SPC–002</span><span class="specimen-line"></span><span class="specimen-plus" aria-hidden="true">＋</span></span>
+                  <span class="specimen-contour" aria-hidden="true"></span>
+                  <span class="specimen-name">Deep One Knight</span>
+                  <span class="specimen-class"><span class="specimen-class-line"></span><span>GUARDIÃO ABISSAL</span><span class="specimen-class-line"></span></span>
+                  <span class="specimen-hover"><span>ABRIR REGISTRO</span><span aria-hidden="true">↗</span></span>
+                </button>
+                <button class="creature-card" type="button" data-creature="deeponemage" data-status="neutral" aria-label="Abrir registro científico: Deep One Mage">
+                  <span class="specimen-top"><span class="specimen-led"></span><span>SPC–003</span><span class="specimen-line"></span><span class="specimen-plus" aria-hidden="true">＋</span></span>
+                  <span class="specimen-contour" aria-hidden="true"></span>
+                  <span class="specimen-name">Deep One Mage</span>
+                  <span class="specimen-class"><span class="specimen-class-line"></span><span>ORGANISMO MÍSTICO</span><span class="specimen-class-line"></span></span>
+                  <span class="specimen-hover"><span>ABRIR REGISTRO</span><span aria-hidden="true">↗</span></span>
+                </button>
+                <button class="creature-card" type="button" data-creature="hullbreaker" data-status="neutral" aria-label="Abrir registro científico: Hullbreaker">
+                  <span class="specimen-top"><span class="specimen-led"></span><span>SPC–004</span><span class="specimen-line"></span><span class="specimen-plus" aria-hidden="true">＋</span></span>
+                  <span class="specimen-contour" aria-hidden="true"></span>
+                  <span class="specimen-name">Hullbreaker</span>
+                  <span class="specimen-class"><span class="specimen-class-line"></span><span>PREDADOR ABISSAL</span><span class="specimen-class-line"></span></span>
+                  <span class="specimen-hover"><span>ABRIR REGISTRO</span><span aria-hidden="true">↗</span></span>
+                </button>
+                <button class="creature-card" type="button" data-creature="lanternfish" data-status="passive" aria-label="Abrir registro científico: Lanternfish">
+                  <span class="specimen-top"><span class="specimen-led"></span><span>SPC–005</span><span class="specimen-line"></span><span class="specimen-plus" aria-hidden="true">＋</span></span>
+                  <span class="specimen-contour" aria-hidden="true"></span>
+                  <span class="specimen-name">Lanternfish</span>
+                  <span class="specimen-class"><span class="specimen-class-line"></span><span>PEIXE BIOLUMINESCENTE</span><span class="specimen-class-line"></span></span>
+                  <span class="specimen-hover"><span>ABRIR REGISTRO</span><span aria-hidden="true">↗</span></span>
+                </button>
+                <button class="creature-card" type="button" data-creature="seapig" data-status="passive" aria-label="Abrir registro científico: Sea Pig">
+                  <span class="specimen-top"><span class="specimen-led"></span><span>SPC–006</span><span class="specimen-line"></span><span class="specimen-plus" aria-hidden="true">＋</span></span>
+                  <span class="specimen-contour" aria-hidden="true"></span>
+                  <span class="specimen-name">Sea Pig</span>
+                  <span class="specimen-class"><span class="specimen-class-line"></span><span>INVERTEBRADO BENTÔNICO</span><span class="specimen-class-line"></span></span>
+                  <span class="specimen-hover"><span>ABRIR REGISTRO</span><span aria-hidden="true">↗</span></span>
+                </button>
+                <button class="creature-card" type="button" data-creature="gossamerworm" data-status="passive" aria-label="Abrir registro científico: Gossamer Worm">
+                  <span class="specimen-top"><span class="specimen-led"></span><span>SPC–007</span><span class="specimen-line"></span><span class="specimen-plus" aria-hidden="true">＋</span></span>
+                  <span class="specimen-contour" aria-hidden="true"></span>
+                  <span class="specimen-name">Gossamer Worm</span>
+                  <span class="specimen-class"><span class="specimen-class-line"></span><span>VERME BIOLUMINESCENTE</span><span class="specimen-class-line"></span></span>
+                  <span class="specimen-hover"><span>ABRIR REGISTRO</span><span aria-hidden="true">↗</span></span>
+                </button>
+                <button class="creature-card" type="button" data-creature="tripodfish" data-status="passive" aria-label="Abrir registro científico: Tripodfish">
+                  <span class="specimen-top"><span class="specimen-led"></span><span>SPC–008</span><span class="specimen-line"></span><span class="specimen-plus" aria-hidden="true">＋</span></span>
+                  <span class="specimen-contour" aria-hidden="true"></span>
+                  <span class="specimen-name">Tripodfish</span>
+                  <span class="specimen-class"><span class="specimen-class-line"></span><span>PEIXE DE FUNDO</span><span class="specimen-class-line"></span></span>
+                  <span class="specimen-hover"><span>ABRIR REGISTRO</span><span aria-hidden="true">↗</span></span>
+                </button>
+                <button class="creature-card" type="button" data-creature="mineguardian" data-status="hostile" aria-label="Abrir registro científico: Mine Guardian">
+                  <span class="specimen-top"><span class="specimen-led"></span><span>SPC–009</span><span class="specimen-line"></span><span class="specimen-plus" aria-hidden="true">＋</span></span>
+                  <span class="specimen-contour" aria-hidden="true"></span>
+                  <span class="specimen-name">Mine Guardian</span>
+                  <span class="specimen-class"><span class="specimen-class-line"></span><span>AUTÔMATO SUBMARINO</span><span class="specimen-class-line"></span></span>
+                  <span class="specimen-hover"><span>ABRIR REGISTRO</span><span aria-hidden="true">↗</span></span>
+                </button>
+                <button class="creature-card k-creature-card" type="button" data-creature="kraken" data-status="anomaly" id="krakenCatalogEntry" aria-label="Abrir registro classificado: Anomalia K-00 — Kraken" hidden>
+                  <span class="specimen-top"><span class="specimen-led"></span><span>K–00 / SIGILO ALFA</span><span class="specimen-line"></span><span class="specimen-plus" aria-hidden="true">＋</span></span><span class="specimen-contour" aria-hidden="true"></span><span class="specimen-name">Kraken</span><span class="specimen-class"><span class="specimen-class-line"></span><span>ANOMALIA NÃO CLASSIFICADA</span><span class="specimen-class-line"></span></span><span class="specimen-hover"><span>ACESSAR ARQUIVO K–00</span><span aria-hidden="true">↗</span></span>
+                </button>
+              </div></div><div class="catalog-sonar-rail" aria-hidden="true"><div class="catalog-radar"><span class="catalog-radar-sweep"></span><span class="radar-pin"></span></div><span>SONAR</span><span>SETOR A–7</span><span>ABYSSAL CHASM</span><i></i></div></div>
+        <div class="catalog-field-notes"><span><i class="legend-dot passive"></i> 04 PASSIVOS</span><span><i class="legend-dot neutral"></i> 04 NEUTROS</span><span><i class="legend-dot hostile"></i> 01 HOSTIL</span><span class="catalog-field-source">CATÁLOGO / EQUIPE DE BIOLOGIA NERÍTICA · PROTOCOLO SPC</span></div>
+        <div class="bestiary-note">✳ NOVE ASSINATURAS DOCUMENTADAS NA FENDA · OUTROS CONTATOS PERMANECEM SEM IDENTIFICAÇÃO</div>
+      </section>
+
+
+
+
+      <!-- ARQUIVO DE PERSONAGENS / DOIS HULLBREAKERS HUMANOIDES. SEM IMAGENS. -->
+      <section class="hull-section section-wrap" id="hullbreakers" aria-labelledby="hull-heading">
+        <div class="section-heading"><div class="section-index">05 <span>—</span> ARQUIVOS DE ENTIDADES</div><div class="tiny-line"></div><span class="section-micro">DOIS CONTATOS / IDENTIDADES RESTRITAS</span></div>
+        <div class="hull-intro">
+          <div><p class="hull-overline">PROTOCOLO DE DOCUMENTAÇÃO / H-01 · H-02</p><h2 id="hull-heading">Os Dois<br/><em>do Abismo.</em></h2></div>
+          <div class="hull-intro-copy"><p>Os registros H–01 e H–02 foram isolados do restante do catálogo. Ambos pertencem a <strong>Hullbreakers humanoides</strong> encontrados nos limites da fenda. Seus nomes foram retirados dos relatórios de circulação. As páginas preservadas permanecem sob sigilo da Estação Nerítica.</p><small>ARQUIVOS H–01 E H–02 / ACESSO FRAGMENTADO PELA ESTAÇÃO</small></div>
+        </div>
+        <div class="hull-twin-grid">
+          <button class="hull-file hull-a" data-hull-card="0" type="button" aria-label="Abrir lore do Hullbreaker humanoide 01">
+            <span class="hull-file-meta"><span>H–01 / HULLBREAKER</span><i>REGISTRO INDIVIDUAL</i></span>
+            <span class="hull-file-middle"><span class="hull-file-mark" aria-hidden="true">I.</span><h3 class="hull-card-name">Identidade não revelada</h3><p class="hull-card-subtitle">Nenhum depoimento recuperado</p></span>
+            <span class="hull-file-foot"><span class="hull-card-state">ARQUIVO SOB SIGILO</span><b aria-hidden="true">↗</b></span>
+          </button>
+          <button class="hull-file hull-b" data-hull-card="1" type="button" aria-label="Abrir lore do Hullbreaker humanoide 02">
+            <span class="hull-file-meta"><span>H–02 / HULLBREAKER</span><i>REGISTRO INDIVIDUAL</i></span>
+            <span class="hull-file-middle"><span class="hull-file-mark" aria-hidden="true">II.</span><h3 class="hull-card-name">Identidade não revelada</h3><p class="hull-card-subtitle">Nenhum depoimento recuperado</p></span>
+            <span class="hull-file-foot"><span class="hull-card-state">ARQUIVO SOB SIGILO</span><b aria-hidden="true">↗</b></span>
+          </button>
+        </div>
+        <div class="hull-callout"><span><strong>H–01 / H–02</strong> — DOIS REGISTROS FORAM SEPARADOS POR ORDEM DA DIRETORIA.</span><span>AS FOLHAS DESSE ARQUIVO NÃO POSSUEM ÍNDICE PÚBLICO.</span></div>
+      </section>
+
+      <!-- ALA NOVA: BIBLIOTECA SUBTERRÂNEA / CAVE COMPENDIUM -->
+      <section class="codex-gateway section-wrap" id="compendio" aria-labelledby="codex-heading">
+        <div class="section-heading"><div class="section-index">06 <span>—</span> ARQUIVOS SUBTERRÂNEOS</div><div class="tiny-line"></div><span class="section-micro">18 VOLUMES / ROTAS CONHECIDAS E NÃO CARTOGRAFADAS</span></div>
+        <div class="codex-intro">
+          <div><p class="codex-overline">CONJUNTO DE PESQUISA / CAVE COMPENDIUM</p><h2 id="codex-heading">A biblioteca<br/><em>do impossível.</em></h2></div>
+          <div class="codex-intro-copy"><p>Dezoito volumes foram recuperados de estações, ruínas e expedições desaparecidas. Alguns descrevem territórios visitados; outros apresentam mapas incompletos de regiões jamais atravessadas. Em cada livro, a pedra, a fauna e as leis do lugar contam uma história diferente.</p><div class="codex-symbol-line"><span>⌁</span> BIBLIOTECA RESTRITA / ACESSO AO ACERVO <span>⌁</span></div></div>
+        </div>
+        <div class="codex-library" id="codexLibrary" role="group" aria-label="Escolha o volume de uma caverna">
+          <button class="codex-volume codex-vol-magnetic" data-cave="magnetic" type="button"><span class="volume-top"><b>VOLUME / I</b><i>01</i></span><span class="volume-decoration">✧</span><span class="volume-info"><small>NEODÍMIO / MAGNETISMO</small><strong>Magnetic<br/>Caves</strong><em>Forças invisíveis</em></span><span class="volume-action">ABRIR VOLUME <b>↗</b></span></button>
+          <button class="codex-volume codex-vol-primordial" data-cave="primordial" type="button"><span class="volume-top"><b>VOLUME / II</b><i>02</i></span><span class="volume-decoration">❋</span><span class="volume-info"><small>ÂMBAR / PRÉ-HISTÓRIA</small><strong>Primordial<br/>Caves</strong><em>O tempo esquecido</em></span><span class="volume-action">ABRIR VOLUME <b>↗</b></span></button>
+          <button class="codex-volume codex-vol-toxic" data-cave="toxic" type="button"><span class="volume-top"><b>VOLUME / III</b><i>03</i></span><span class="volume-decoration">☢</span><span class="volume-info"><small>RADIAÇÃO / MUTAGÊNESE</small><strong>Toxic<br/>Caves</strong><em>Ciência sem limites</em></span><span class="volume-action">ABRIR VOLUME <b>↗</b></span></button>
+          <button class="codex-volume codex-vol-abyssal" data-cave="abyssal" type="button"><span class="volume-top"><b>VOLUME / IV</b><i>04</i></span><span class="volume-decoration">◉</span><span class="volume-info"><small>OCEANOGRAFIA / ABISMO</small><strong>Abyssal<br/>Chasm</strong><em>O mar sem sol</em></span><span class="volume-action">ABRIR VOLUME <b>↗</b></span></button>
+          <button class="codex-volume codex-vol-forlorn" data-cave="forlorn" type="button"><span class="volume-top"><b>VOLUME / V</b><i>05</i></span><span class="volume-decoration">◈</span><span class="volume-info"><small>ESCURO / OCULTISMO</small><strong>Forlorn<br/>Hollows</strong><em>Algo vive na sombra</em></span><span class="volume-action">ABRIR VOLUME <b>↗</b></span></button>
+          <button class="codex-volume codex-vol-candy" data-cave="candy" type="button"><span class="volume-top"><b>VOLUME / VI</b><i>06</i></span><span class="volume-decoration">✦</span><span class="volume-info"><small>ALQUIMIA / CONFEITARIA</small><strong>Candy<br/>Cavity</strong><em>A doçura mente</em></span><span class="volume-action">ABRIR VOLUME <b>↗</b></span></button>
+        </div>
+        <div class="codex-gateway-foot"><span>◉ NOVA ALA DESBLOQUEADA: BIBLIOTECA EXPANDIDA DE CAVERNAS</span><span>ALGUNS VOLUMES PERMANECEM SEM CARTOGRAFIA DEFINITIVA</span></div>
+      </section>
+
+      <section class="archives-section section-wrap" id="arquivos" aria-labelledby="archives-heading"><div class="section-heading"><div class="section-index">07 <span>—</span> ARQUIVOS RECUPERADOS</div><div class="tiny-line"></div><span class="section-micro">EXPEDIÇÃO NERÍTICA / DOCUMENTOS RECUPERADOS</span></div><div class="archive-header"><div><div class="dive-kicker">DOCUMENTAÇÃO • PROTOCOLO DE RESGATE</div><h2 id="archives-heading">O que restou<br/><em>da expedição.</em></h2></div><p>Recupere fragmentos de transmissões e relatos de bordo. Cada documento foi recolhido na estação e acrescenta uma peça ao incidente K–00.</p></div><div class="archive-layout"><div class="archive-index" role="group" aria-label="Arquivos da expedição"><button class="archive-entry active" data-log="0" aria-pressed="true"><span>NR–001 / 04.08</span><strong>Primeiro contato</strong><small>REGISTRO INTACTO ↗</small></button><button class="archive-entry" data-log="1" aria-pressed="false"><span>NR–004 / 06.08</span><strong>O esqueleto</strong><small>REGISTRO PARCIAL ↗</small></button><button class="archive-entry" data-log="2" aria-pressed="false"><span>NR–011 / 09.08</span><strong>Eco impossível</strong><small>REGISTRO DE SONAR ↗</small></button><button class="archive-entry" data-log="3" aria-pressed="false"><span>NR–017 / 11.08</span><strong>Última transmissão</strong><small>ARQUIVO CORROMPIDO ↗</small></button><button class="archive-entry secret-log" id="secretLogButton" data-log="4" aria-pressed="false" hidden><span>NR–000 / [SEM DATA]</span><strong>O que nos viu</strong><small>DESCLASSIFICADO ↗</small></button></div><article class="archive-document" aria-live="polite"><div class="document-top"><span id="archiveDate">NR–001 / PRIMEIRO REGISTRO</span><span id="archiveCondition">INTEGRIDADE 98%</span></div><div class="doc-decoration">NERITICA<span> / RESEARCH DEPARTMENT</span></div><h3 id="archiveTitle">Primeiro contato</h3><div class="doc-text" id="archiveText"><p>O sonar encontrou a abertura da fenda às 04:12. A água escureceu antes de atingirmos a margem da plataforma. O casco está estável.</p><p>Existem estruturas construídas no fundo. Não são formações naturais.</p></div><div class="doc-signature"><span>ASSINATURA DIGITAL: <strong id="archiveAuthor">DRA. M. VALEN</strong></span><span id="archiveStamp">ACESSO 01 / LIVRE</span></div></article></div></section>
+
+      <section class="anomaly-section section-wrap" id="anomalia" aria-labelledby="anomaly-heading"><div class="anomaly-backdrop-grid" aria-hidden="true"></div><div class="section-heading"><div class="section-index">08 <span>—</span> PROTOCOLO K–00</div><div class="tiny-line"></div><span class="section-micro">ACESSO DE PESQUISA RESTRITO</span></div><div class="anomaly-layout"><div class="anomaly-lead"><div class="anomaly-designation"><i></i> CLASSIFICAÇÃO PENDENTE / ENTIDADE DESCONHECIDA</div><h2 id="anomaly-heading">Há algo <em>maior</em><br/>que a fenda.</h2><p>O sensor não conseguiu medir suas dimensões. Os registros de acústica não correspondem a nenhuma espécie catalogada. E o último tripulante a vê-lo escreveu apenas uma palavra.</p><div class="anomaly-word">KRAKEN<span> / K–00</span></div><p class="anomaly-footnote">O arquivo K–00 permanece incompleto. Apenas fragmentos visuais e acústicos foram recuperados. Não houve aproximação suficiente para identificar a entidade.</p></div><div class="anomaly-access"><div class="access-top"><span>TERMINAL DE CONTENÇÃO</span><span id="accessState">ACESSO RESTRITO</span></div><p>Três condições de observação precisam ser atendidas para liberar a gravação da escotilha e registrar a anomalia.</p><div class="access-checks"><div class="access-item" id="taskSonar"><span class="access-icon">○</span><div><strong>01 / TRÊS ECOS IDENTIFICADOS</strong><small>Use o sonar no início da expedição.</small></div><span class="access-state">PENDENTE</span></div><div class="access-item" id="taskDepth"><span class="access-icon">○</span><div><strong>02 / DESCIDA AO FUNDO DA FENDA</strong><small>Alcance pelo menos 4.200 m na cápsula.</small></div><span class="access-state">PENDENTE</span></div><div class="access-item" id="taskSignal"><span class="access-icon">○</span><div><strong>03 / TRANSMISSÃO DECODIFICADA</strong><small>Restaure a frequência no receptor N–07.</small></div><span class="access-state">PENDENTE</span></div></div><button id="krakenTrigger" class="anomaly-button" type="button" disabled><span>◈</span> AGUARDANDO AUTORIZAÇÃO <span>↗</span></button><div id="anomalyFeedback" class="access-footer" aria-live="polite">0 / 3 CONDIÇÕES ATENDIDAS • CÂMERA K–00 INDISPONÍVEL</div></div></div><div class="anomaly-footer"><span>AVISO INTERNO: A ENTIDADE K–00 NÃO RESPONDE AOS PADRÕES CONHECIDOS DE CONTENÇÃO.</span><a href="#transmissao">ABRIR RECEPTOR DE FREQUÊNCIA ↗</a></div></section>
+
+      <section class="transmission-section" id="transmissao" aria-labelledby="signal-title">
+        <div class="transmission-inner section-wrap"><div class="signal-left"><div class="section-index">09 <span>—</span> FREQUÊNCIA DESCONHECIDA</div><div class="signal-eyebrow"><span class="pulsing-dot"></span> TRANSMISSÃO INTERROMPIDA HÁ 17 MINUTOS</div><h2 id="signal-title">Alguma coisa está<br/><em>respondendo.</em></h2><p>O último sonar captou um padrão que não se parece com rocha, corrente ou animal. Ajuste a frequência do receptor para tentar decifrar a transmissão.</p><div class="transmission-disclaimer">RECEPTOR N–07 / ARQUIVO BLOQUEADO POR INTERFERÊNCIA</div></div>
+          <div class="receiver"><div class="receiver-head"><span><span class="receiver-led"></span> RECEPTOR / N–07</span><span class="receiver-frequency"><b id="frequencyValue">38.4</b> kHz</span></div><canvas id="waveform" width="700" height="230" aria-label="Forma de onda do sinal submarino" role="img"></canvas><div class="receiver-control"><div class="freq-labels"><span>12.0 kHz</span><span>SINTONIA MANUAL</span><span>88.0 kHz</span></div><input id="frequency" type="range" min="120" max="880" value="384" step="1" aria-label="Ajustar frequência"/><div class="receiver-footer"><span id="signalStatus">SINAL FRAGMENTADO — AJUSTE A FREQUÊNCIA</span><button id="decodeBtn" disabled>DECODIFICAR <span>↗</span></button></div></div><div class="decoded-message" id="decodedMessage" hidden><small>TRANSMISSÃO DECODIFICADA / REGISTRO 017</small><p>“Não foi o mar que nos engoliu. <em>Foi o que despertamos lá embaixo.</em>”</p><span>— ÚLTIMA MENSAGEM DA EXPEDIÇÃO NERÍTICA</span></div></div>
+        </div>
+      </section>
+    </main>
+    <footer class="footer section-wrap"><div><a href="#inicio" class="footer-logo">ABISSAL<span>.</span></a><p>Os relatórios preservados nesta estação não encerram a verdade sobre o abismo. Alguns registros foram perdidos. Outros jamais deveriam ter sido recuperados.</p></div><div class="footer-links"><a href="#compendio">BIBLIOTECA SUBTERRÂNEA ↗</a><a href="#hullbreakers">ARQUIVOS H–01 / H–02 ↗</a><a href="#inicio">VOLTAR AO TOPO ↑</a></div><div class="footer-end"><span>O FUNDO DO MAR NÃO É O FIM DO MUNDO.</span><span>É ONDE OUTRO COMEÇA.</span></div></footer>
+  </div>
+
+
+  <div id="krakenEncounter" class="kraken-encounter" hidden role="dialog" aria-modal="true" aria-labelledby="encounterTitle"><div class="encounter-vignette"></div><div class="encounter-noise" aria-hidden="true"></div><div class="encounter-sea" aria-hidden="true"><div class="encounter-eye"><div class="eye-ring"></div><div class="eye-center"></div></div><svg class="encounter-tentacles" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><path d="M-180 700C80 610 145 830 420 520S810 360 890 160"/><path d="M1490 780C1160 540 1155 770 1010 550S690 320 670 100"/><path d="M1320 1100C1090 660 700 890 630 570S370 250 270 170"/><path d="M-100 340C170 210 340 460 505 290S700 155 860 -60"/></svg><div class="encounter-window"></div></div><div class="encounter-ui"><div class="encounter-top"><span>◉ SISTEMA DE EMERGÊNCIA / CÂMERA K–00</span><button id="closeEncounter" type="button" aria-label="Encerrar visualização do encontro">ENCERRAR ✕</button></div><div class="encounter-center"><span id="encounterCode">CONTATO RECUPERADO / 01</span><h2 id="encounterTitle">A água <em>se moveu.</em></h2><p id="encounterNarration">Uma forma gigantesca atravessa o alcance do sonar. Seu tamanho excede a margem de leitura.</p></div><div class="encounter-bottom"><div class="encounter-progress"><span class="encounter-segment active"></span><span class="encounter-segment"></span><span class="encounter-segment"></span><span class="encounter-segment"></span></div><button id="nextEncounter" class="anomaly-button" type="button">CONTINUAR OBSERVAÇÃO →</button><span>TRANSMISSÃO / AC–04 / AO VIVO</span></div></div></div>
+
+  <div class="detail-overlay" id="detailOverlay" hidden><div class="detail-backdrop" id="detailBackdrop"></div><aside class="detail-drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" tabindex="-1"><div class="drawer-head"><span id="drawerType">ARQUIVO / 000</span><button id="closeDrawer" aria-label="Fechar registro">✕</button></div><div class="drawer-symbol" id="drawerSymbol" aria-hidden="true">◌</div><div class="drawer-content"><div class="drawer-science" id="drawerScience" hidden><div><small>IDENTIFICAÇÃO</small><strong id="drawerSpeciesId">—</strong></div><div><small>COMPORTAMENTO</small><strong id="drawerBehavior">—</strong></div><div><small>CLASSIFICAÇÃO</small><strong id="drawerTaxonomy">—</strong></div><div><small>HABITAT</small><strong id="drawerHabitat">—</strong></div></div><div class="drawer-eyebrow" id="drawerEyebrow">REGISTRO ENCONTRADO</div><h2 id="drawerTitle">Registro abissal</h2><p id="drawerDescription"></p><div class="drawer-divider"></div><div class="drawer-note"><small>NOTA RECUPERADA / EQUIPE NERÍTICA</small><p id="drawerNote"></p></div><div class="drawer-source" id="drawerSource">DOSSIÊ DE CAMPO / FENDA ABISSAL</div></div><button class="drawer-close-bottom" id="drawerCloseBottom">FECHAR REGISTRO <span>↗</span></button></aside></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Livro temático, com fundo e páginas próprios por caverna -->
+  <div id="codexPortal" class="codex-portal" hidden role="dialog" aria-modal="true" aria-labelledby="codexPortalTitle" tabindex="-1">
+    <div class="codex-atmosphere" aria-hidden="true"><div class="codex-atmosphere-light"></div><div class="codex-atmosphere-motes"></div><div class="codex-atmosphere-structures"></div><div class="codex-atmosphere-sigil">✧</div></div>
+    <div class="codex-room">
+      <header class="codex-room-header"><div class="codex-room-brand">ALEX'S CAVES <span> / </span> <em>CAVE COMPENDIUM</em></div><div class="codex-room-index" id="codexVolumeNumber">VOLUME 01 / 18</div><button id="codexClose" class="codex-close" type="button" aria-label="Fechar livro e retornar à biblioteca">✕ <span>FECHAR LIVRO</span></button></header>
+      <div class="codex-room-heading"><div><p class="codex-room-kicker" id="codexRoomKicker">CAVE COMPENDIUM • ARQUIVO EXPANDIDO</p><h2 id="codexPortalTitle">Abyssal Chasm</h2><p id="codexRoomSummary">Dezoito volumes. Dezoito ecossistemas impossíveis.</p></div><div class="codex-room-icon" id="codexRoomIcon" aria-hidden="true">◉</div></div>
+      <div class="codex-tabs" id="codexTabs" role="tablist" aria-label="Capítulos do livro">
+        <button class="codex-tab current" data-chapter="overview" type="button" role="tab" aria-selected="true">I · Introdução</button>
+        <button class="codex-tab" data-chapter="creatures" type="button" role="tab" aria-selected="false">II · Criaturas</button>
+        <button class="codex-tab" data-chapter="weapons" type="button" role="tab" aria-selected="false">III · Arsenal</button>
+        <button class="codex-tab" data-chapter="effects" type="button" role="tab" aria-selected="false">IV · Efeitos</button>
+        <button class="codex-tab" data-chapter="resources" type="button" role="tab" aria-selected="false">V · Recursos</button>
+        <button class="codex-tab" data-chapter="landmarks" type="button" role="tab" aria-selected="false">VI · Lugares</button>
+      </div>
+      <div class="codex-open-book" id="codexOpenBook">
+        <div class="codex-page codex-left-page">
+          <div class="codex-page-head"><span id="codexBookVolume">TOMO I</span><span>ESTUDO DE CAMPO</span></div>
+          <div class="codex-page-sigil" id="codexPageSigil" aria-hidden="true">◉</div>
+          <p class="codex-manuscript-label" id="codexManuscriptLabel">O MUNDO SEM SOL</p>
+          <h3 id="codexLeftTitle">O abismo escuta.</h3>
+          <p id="codexLeftText">Abaixo da superfície existe outra sociedade.</p>
+          <div class="codex-page-facts" id="codexFacts"></div>
+          <div class="codex-page-footer"><span>ACERVO DA ESTAÇÃO</span><span id="codexLeftPageNo">01</span></div>
+        </div>
+        <div class="codex-page codex-right-page">
+          <div class="codex-page-head"><span id="codexChapterTag">CAPÍTULO I</span><span>ARQUIVO SUBTERRÂNEO</span></div>
+          <div class="codex-page-scroll" id="codexPageContent" aria-live="polite"></div>
+          <div class="codex-page-footer"><span>VOLUME DE EXPLORAÇÃO</span><span id="codexRightPageNo">02</span></div>
+        </div>
+      </div>
+      <div class="codex-bottom-bar"><button class="codex-page-arrow" id="codexPrev" type="button">← PÁGINA ANTERIOR</button><span id="codexProgress">CAPÍTULO 01 / 06</span><button class="codex-page-arrow" id="codexNext" type="button">PÁGINA SEGUINTE →</button></div>
+      <div class="codex-footnote">A BIBLIOTECA PRESERVA SOMENTE FRAGMENTOS DAS PRIMEIRAS EXPEDIÇÕES. NENHUM MAPA FOI CONSIDERADO DEFINITIVO.</div>
+    </div>
+  </div>
+
+
+  <!-- SALA DE LORE DOS DOIS HULLBREAKERS HUMANOIDES. NENHUMA IMAGEM DE PERSONAGEM. -->
+  <div class="hull-portal" id="hullPortal" hidden role="dialog" aria-modal="true" aria-labelledby="hullPortalTitle" tabindex="-1">
+    <div class="hull-room">
+      <header class="hull-room-top"><span>ABISSAL / ARQUIVOS DE ENTIDADES / NÍVEL DE SIGILO 04</span><button id="hullClose" type="button">✕ SAIR DO ARQUIVO</button></header>
+      <div class="hull-room-heading"><div><p id="hullSubjectNumber">REGISTRO H–01 / HULLBREAKER HUMANOIDE</p><h2 id="hullPortalTitle">Identidade não revelada</h2><small>DOCUMENTAÇÃO INCOMPLETA · INFORMAÇÕES SOB SIGILO</small></div><div class="hull-room-marker" id="hullRoomMarker" aria-hidden="true">I</div></div>
+      <div class="hull-room-layout">
+        <aside class="hull-side">
+          <p class="hull-side-label">SELECIONAR REGISTRO</p>
+          <div class="hull-switcher"><button id="hullSwitchA" type="button" class="active" aria-pressed="true">H–01</button><button id="hullSwitchB" type="button" aria-pressed="false">H–02</button></div>
+          <p class="hull-side-label">ÍNDICE NARRATIVO</p><nav class="hull-chapter-nav" id="hullChapterNav" aria-label="Capítulos da lore"></nav>
+          <button class="hull-edit-btn" id="hullEditButton" type="button">✎ ABRIR TRANSCRIÇÃO</button>
+          <p class="hull-side-note"></p>
+        </aside>
+        <article class="hull-manuscript" aria-live="polite">
+          <div class="hull-page-head"><span id="hullRecordTag">CÓDICE H–01</span><span>DOSSIÊ RESERVADO</span></div>
+          <h3 class="hull-story-title" id="hullStoryTitle">Apresentação</h3><p class="hull-story-subtitle" id="hullStorySubtitle">Nenhum testemunho foi autenticado.</p>
+          <div class="hull-story-content hull-empty" id="hullStoryContent">Este documento permanece sem transcrição.</div>
+          <div class="hull-page-foot"><span id="hullChapterTotal">00 CAPÍTULOS</span><span id="hullPageNumber">00</span></div>
+        </article>
+      </div>
+      <section class="hull-editor" id="hullEditor" aria-label="Editor de lore" hidden>
+        <div class="hull-editor-head"><div><h3>Terminal de transcrição</h3><p>As transcrições H–01 e H–02 são armazenadas em arquivos independentes.</p></div></div>
+        <div class="hull-editor-fields">
+          <div class="hull-field"><label for="hullEditName">Nome do personagem</label><input id="hullEditName" maxlength="180" type="text" placeholder="Ainda não definido"></div>
+          <div class="hull-field"><label for="hullEditSubtitle">Subtítulo / frase de apresentação</label><input id="hullEditSubtitle" maxlength="350" type="text" placeholder="Frase que representa este arquivo"></div>
+          <div class="hull-field wide"><label for="hullEditIntro">Apresentação ou prólogo</label><textarea id="hullEditIntro" rows="6" placeholder="Escreva a introdução do personagem. Pode deixar vazio por enquanto."></textarea></div>
+        </div>
+        <p class="hull-side-label">CAPÍTULOS DO DOSSIÊ</p><div id="hullEditorChapters"></div>
+        <div class="hull-editor-actions">
+          <button class="hull-secondary-btn" id="hullAddChapter" type="button">＋ ADICIONAR CAPÍTULO</button>
+          <button class="hull-save-btn" id="hullSaveEditor" type="button">SELAR TRANSCRIÇÃO</button>
+          <button class="hull-secondary-btn" id="hullExport" type="button">EXTRAIR CÓPIA DO ARQUIVO</button>
+          <button class="hull-secondary-btn" id="hullImport" type="button">RESTAURAR ARQUIVO</button>
+          <input class="hull-file-input" type="file" id="hullImportFile" accept=".json,application/json" aria-label="Selecionar arquivo de restauração">
+        </div>
+        <div id="hullEditorStatus" class="hull-editor-status" role="status" aria-live="polite"></div>
+      </section>
+    </div>
+  </div>
+
+  <script src="script.js" defer></script>
+  <script src="expedition.js" defer></script>
+  <script src="compendium.js" defer></script>
+  <script src="hullbreakers.js" defer></script>
+</body>
+</html>
